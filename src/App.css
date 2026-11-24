@@ -253,6 +253,75 @@ button:disabled { cursor: default; }
 }
 .feedback .primary { flex-shrink: 0; min-width: 160px; }
 
+.primary:disabled { opacity: 0.6; transform: none; }
+.hint { margin-top: 24px; font-size: 16px; color: var(--ink-soft); word-break: keep-all; }
+.result .hint + .primary { margin-top: 16px; }
+.page { gap: 20px; align-content: center; }
+
+/* ---------- 룰렛 ---------- */
+.roulette { text-align: center; }
+.roulette-title {
+  margin-top: 18px;
+  font-size: clamp(24px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+.roulette-title .accent { color: var(--mint); }
+.roulette .primary { margin-top: 28px; }
+.roulette .lead { margin-top: 20px; }
+
+.wheel-wrap {
+  position: relative;
+  width: min(380px, 70vw, 48vh);
+  aspect-ratio: 1;
+  margin: 28px auto 0;
+}
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 18px 30px rgba(31, 60, 52, 0.22));
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.12, 0.75, 0.08, 1);
+}
+.pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 30px solid var(--ink);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2));
+}
+.wheel-wrap.done { animation: pop 0.5s ease; }
+
+/* ---------- 스태프용 재고 ---------- */
+.admin {
+  width: min(420px, 100%);
+  padding: 20px 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px dashed #9aa8a4;
+  font-size: 16px;
+}
+.admin-title { font-weight: 700; color: var(--ink-soft); margin-bottom: 12px; }
+.admin-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+.admin-ctrl { display: flex; align-items: center; gap: 14px; }
+.admin-ctrl b { min-width: 32px; text-align: center; font-size: 20px; }
+.admin-ctrl button {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--mint-soft); color: var(--mint); font-size: 22px; font-weight: 700;
+}
+.admin-reset {
+  margin-top: 14px; width: 100%; min-height: 48px; border-radius: 12px;
+  background: var(--ink); color: #fff; font-weight: 700;
+}
+
 /* 태블릿 가로 모드: 문제는 왼쪽, 보기는 오른쪽 */
 @media (min-width: 1000px) and (orientation: landscape) {
   .card { width: min(1120px, 100%); }

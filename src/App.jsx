@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { QUESTIONS } from './quizData.js'
+import Roulette, { AdminPanel } from './Roulette.jsx'
+import { REQUIRE_ALL_CORRECT } from './prize.js'
+
+const IS_ADMIN = new URLSearchParams(window.location.search).has('admin')
 
 const NUMS = ['①', '②', '③', '④', '⑤']
 
 export default function App() {
-  const [phase, setPhase] = useState('start') // 'start' | 'play' | 'result'
+  const [phase, setPhase] = useState('start') // 'start' | 'play' | 'result' | 'roulette'
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState(null) // null | 선택한 보기 번호(1부터)
   const [results, setResults] = useState([]) // 문제별 정답 여부
@@ -49,7 +53,7 @@ export default function App() {
           e.preventDefault()
           next()
         }
-      } else if (e.key === 'Enter') {
+      } else if (phase === 'start' && e.key === 'Enter') {
         e.preventDefault()
         start()
       }
@@ -75,9 +79,20 @@ export default function App() {
         )}
 
         {phase === 'result' && (
-          <ResultScreen score={score} total={total} results={results} onRetry={start} />
+          <ResultScreen
+            score={score}
+            total={total}
+            results={results}
+            canSpin={!REQUIRE_ALL_CORRECT || score === total}
+            onSpin={() => setPhase('roulette')}
+            onHome={() => setPhase('start')}
+          />
         )}
+
+        {phase === 'roulette' && <Roulette onHome={() => setPhase('start')} />}
       </section>
+
+      {phase === 'start' && IS_ADMIN && <AdminPanel />}
     </main>
   )
 }
@@ -165,7 +180,7 @@ function PlayScreen({ q, index, total, picked, onChoose, onNext }) {
   )
 }
 
-function ResultScreen({ score, total, results, onRetry }) {
+function ResultScreen({ score, total, results, canSpin, onSpin, onHome }) {
   const ratio = score / total
   const message =
     ratio === 1 ? '완벽해요! Turtle Neck 마스터 🐢👑'
@@ -189,9 +204,18 @@ function ResultScreen({ score, total, results, onRetry }) {
         ))}
       </ol>
 
-      <button className="primary" onClick={onRetry}>
-        다시 풀기
-      </button>
+      {canSpin ? (
+        <button className="primary" onClick={onSpin}>
+          🎁 경품 룰렛 돌리러 가기
+        </button>
+      ) : (
+        <>
+          <p className="hint">아쉽지만 3문제를 모두 맞혀야 룰렛에 도전할 수 있어요</p>
+          <button className="primary" onClick={onHome}>
+            처음으로
+          </button>
+        </>
+      )}
     </div>
   )
 }
